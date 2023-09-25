@@ -1,4 +1,4 @@
-function bubblesort(arr) {
+function bubbleSort(arr) {
     const swap = (arr, idx1, idx2, swapped) => {
         [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
         swapped = true;
@@ -13,4 +13,4 @@ function bubblesort(arr) {
     }
     return arr;
 }
-bubblesort([10,9,8,1,2]);
+bubbleSort([10,9,8,1,2]);
