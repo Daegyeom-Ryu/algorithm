@@ -1,3 +1,46 @@
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+class Stack {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+        this.length = 0;
+    }
+    push(value) {
+        let newNode = new Node(value);
+        if(!this.head) {
+            this.head = newNode;
+            this.tail = newNode;
+        }
+        this.tail.next = newNode;
+        this.tail = this.tail.next;
+        this.length++;
+        return this;
+    }
+    pop() {
+        if(!this.head)  return undefined;
+        let poppedNode = this.tail;
+        if(this.head === this.tail) {
+            this.head = null;
+            this.tail = null;
+        } else {
+            let node = this.head;
+            let beforeNode;
+            while(node.next) {
+                beforeNode = node;
+                node = node.next;
+            }
+            beforeNode.next = null;
+            this.tail = beforeNode;
+        }
+        this.length--;
+        return poppedNode.value;// vertex value
+    }
+}
 // Undirected Graph with adjacencyList
 class Graph {
     constructor() {
@@ -24,22 +67,77 @@ class Graph {
         }
         delete this.adjacencyList[vertex];
     }
+    depthFirstIterative(start) {
+        if(!this.adjacencyList[start]) return; // 아예 없는 vertex 입력시 종료
+        const result = [];
+        const visited = {};
+        const stack = new Stack();
+        const adjacencyList = this.adjacencyList;
+        function dfs(vertex) {
+            visited[vertex] = true;
+            stack.push(vertex);
+            let currVertex;
+            while(stack.length > 0) {
+                currVertex = stack.pop();
+                result.push(currVertex);
+                adjacencyList[currVertex].forEach(neighbor=>{
+                    if(!visited[neighbor]) {
+                        visited[neighbor] = true;
+                        stack.push(neighbor);
+                    }
+                });   
+            }
+        }
+        dfs(start);
+        // 마저 돌지 못한 vertex도 다시 dfs 호출해줘야 함
+        for(let v in this.adjacencyList) {
+            if(!visited[v]) dfs(v);
+        }
+        return result;
+    }
+    depthFirstRecursive(start) {
+        if(!this.adjacencyList[start]) return; // 아예 없는 vertex 입력시 종료
+        const result = [];
+        const visited = {};
+        const adjacencyList = this.adjacencyList;
+        function dfs(vertex) {
+            visited[vertex] = true;
+            result.push(vertex);
+            adjacencyList[vertex].forEach(neighbor => {
+                if(!visited[neighbor])  dfs(neighbor);
+            });
+        }
+        dfs(start);
+
+        // 마저 돌지 못한 vertex도 다시 dfs 호출해줘야 함
+        for(let v in this.adjacencyList) {
+            if(!visited[v]) dfs(v);
+        }
+        return result;
+    }
 }
 let graph = new Graph();
-graph.addVertex("Dallas");
-graph.addVertex("Tokyo");
-graph.addVertex("Aspen");
-graph.addVertex("Los Angeles");
-graph.addVertex("Hong Kong");
-graph.addEdge("Dallas","Tokyo");
-graph.addEdge("Dallas","Aspen");
-graph.addEdge("Hong Kong","Tokyo");
-graph.addEdge("Hong Kong","Dallas");
-graph.addEdge("Los Angeles","Hong Kong");
-graph.addEdge("Los Angeles","Aspen");
-console.log(graph.adjacencyList);
-graph.removeVertex('Hong Kong');
-console.log(graph.adjacencyList);
-graph.removeVertex('Aspen');
+graph.addVertex("A");
+graph.addVertex("B");
+graph.addVertex("C");
+graph.addVertex("D");
+graph.addVertex("E");
+graph.addVertex("F");
 
-console.log(graph.adjacencyList);
+graph.addEdge("A","B");
+graph.addEdge("A","C");
+graph.addEdge("B","D");
+graph.addEdge("C","E");
+graph.addEdge("D","E");
+graph.addEdge("D","F");
+graph.addEdge("E","F");
+console.log(graph.depthFirstRecursive("A"));    // [ 'A', 'B', 'D', 'E', 'C', 'F' ]
+console.log(graph.depthFirstIterative("A"));    // [ 'A', 'B', 'D', 'E', 'C', 'F' ]
+
+//      A
+//   /    \      
+//   B     C
+//   |     |
+//   D --- E
+//    \  /
+//     F 
