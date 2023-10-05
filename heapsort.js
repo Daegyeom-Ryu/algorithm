@@ -1,4 +1,7 @@
 function heapSort(arr) {
+    const swap = (arr, idx1, idx2) => {
+        [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
+    }
     function downHeap(arr, left, right) {
         let temp = arr[left];
         let parent = left;
@@ -17,14 +20,11 @@ function heapSort(arr) {
     for(let i = Math.floor((n - 1)/2); i >= 0; i--) {
         downHeap(arr,i,n-1);
     }
-    console.log(arr);
     for(let i = n - 1; i > 0; i--){
-        [arr[0],arr[i]] = [arr[i],arr[0]];
+        swap(arr, 0, i);
         downHeap(arr,0,i-1);
     }
-    console.log(arr);
 }
-
 
 let arr = [1,3,5,7,9,2,4,6,8,10];
 heapSort(arr);
