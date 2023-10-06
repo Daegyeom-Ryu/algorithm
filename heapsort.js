@@ -2,7 +2,7 @@ function heapSort(arr) {
     const swap = (arr, idx1, idx2) => {
         [arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]];
     }
-    function downHeap(arr, left, right) {
+    function heapify(arr, left, right) {
         let temp = arr[left];
         let parent = left;
         while(parent < Math.floor((right+1)/2)) {
@@ -13,18 +13,49 @@ function heapSort(arr) {
             if(temp > arr[child])    break;
             arr[parent] = arr[child];
             parent = child;
+            compCount++;    // for time complexity count
         }
         arr[parent] = temp;
+        compCount++;        // for time complexity count
     }
     let n = arr.length;
     for(let i = Math.floor((n - 1)/2); i >= 0; i--) {
-        downHeap(arr,i,n-1);
+        heapify(arr,i,n-1);
     }
     for(let i = n - 1; i > 0; i--){
         swap(arr, 0, i);
-        downHeap(arr,0,i-1);
+        heapify(arr,0,i-1);
     }
 }
 
-let arr = [1,3,5,7,9,2,4,6,8,10];
-heapSort(arr);
+// generate array
+function generateUnorderedArray(numberOfArray=1000) {
+    const arr = [];
+    let num = 0;
+    arr.push(num);
+    for (let i = 1; i<numberOfArray; i++) {
+        num = Math.floor(Math.random() * numberOfArray);
+        while(arr.includes(num))    num = Math.floor(Math.random() * numberOfArray);
+        arr.push(num);
+    }
+    return arr;
+}
+function generateOrderedArray(numberOfArray=1000) {
+    const arr = [];
+    for(let i = 0; i<numberOfArray; i++) {
+        arr.push(i);
+    }
+    return arr;
+}
+
+let unOrderedArr = generateUnorderedArray(3000);
+let orderedArr = generateOrderedArray(3000);
+
+let compCount = 0;
+heapSort(unOrderedArr);
+console.log(` Time Complexity: ${compCount}, unOrderedArr`);
+
+compCount = 0;
+heapSort(orderedArr);
+console.log(` Time Complexity: ${compCount}, orderedArr`);
+

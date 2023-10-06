@@ -1,10 +1,22 @@
+function selectPivot(arr, startIdx, endIdx) {
+    let i = startIdx, j = endIdx, k = Math.floor((startIdx+endIdx)/2);
+    let pivotIdx;
+    if(Math.max(arr[i],arr[j],arr[k]) === arr[i])
+        Math.max(arr[j],arr[k]) === arr[j] ? pivotIdx = j : pivotIdx = k;
+    else if(Math.max(arr[i],arr[j],arr[k]) === arr[j])
+        Math.max(arr[i],arr[k]) === arr[i] ? pivotIdx = i : pivotIdx = k;
+    else if(Math.max(arr[i],arr[j],arr[k]) === arr[k])
+        Math.max(arr[i],arr[j]) === arr[i] ? pivotIdx = i : pivotIdx = j;
+    return pivotIdx;
+}
 function pivot(arr, startIdx = 0, endIdx = arr.length - 1) {
     const swap = (array, idx1, idx2) => {
         [array[idx1],array[idx2]] = [array[idx2], array[idx1]];
     }
-
+    // let pivotIdx = startIdx;
     // let pivotIdx = Math.floor((startIdx + endIdx) / 2);
-    let pivotIdx = startIdx + Math.floor(Math.random()*(endIdx - startIdx));
+    // let pivotIdx = startIdx + Math.floor(Math.random()*(endIdx - startIdx));
+    let pivotIdx = selectPivot(arr, startIdx, endIdx);
     const pivot = arr[pivotIdx];
     let beforePivotIdx = pivotIdx;
     let criterionIdx = pivotIdx;
@@ -53,8 +65,8 @@ function generateOrderedArray(numberOfArray=1000) {
     return arr;
 }
 
-let unOrderedArr = generateUnorderedArray(2000);
-let orderedArr = generateOrderedArray(2000);
+let unOrderedArr = generateUnorderedArray(3000);
+let orderedArr = generateOrderedArray(3000);
 
 let compCount = 0;
 quickSort(unOrderedArr);
